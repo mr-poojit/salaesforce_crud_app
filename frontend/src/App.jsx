@@ -153,10 +153,13 @@ export default function App() {
     const hashed = await sha256(codeVerifier);
     const codeChallenge = base64urlencode(hashed);
 
-    const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
-    const loginUrl = config?.login_url || 'https://login.salesforce.com';
+    const cleanOrigin = window.location.origin.replace(/\/+$/, '');
+    const cleanPath = window.location.pathname.replace(/\/+$/, '');
+    const redirectUri = encodeURIComponent(`${cleanOrigin}${cleanPath}/`);
+    const loginUrl = (config?.login_url || 'https://login.salesforce.com').replace(/\/+$/, '');
     const authUrl = `${loginUrl}/services/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&code_challenge=${codeChallenge}&code_challenge_method=S256`;
     window.location.href = authUrl;
+
   };
 
 
