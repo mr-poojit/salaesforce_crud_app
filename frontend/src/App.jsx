@@ -72,12 +72,18 @@ export default function App() {
     return window.crypto.subtle.digest('SHA-256', data);
   };
 
-  const base64urlencode = (str) => {
-    return btoa(String.fromCharCode.apply(null, new Uint8Array(str)))
+  const base64urlencode = (buffer) => {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary)
       .replace(/\+/g, '-')
       .replace(/\//g, '_')
       .replace(/=+$/, '');
   };
+
 
   // Handle OAuth Redirect Code
   useEffect(() => {
