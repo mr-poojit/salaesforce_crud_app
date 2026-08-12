@@ -85,11 +85,14 @@ export default function App() {
   };
 
 
+  const [authExchanging, setAuthExchanging] = useState(false);
+
   // Handle OAuth Redirect Code
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code && !authData) {
+      setAuthExchanging(true);
       setLoading(true);
       const codeVerifier = sessionStorage.getItem('sf_code_verifier');
       const payload = {
@@ -118,10 +121,13 @@ export default function App() {
         }
       })
       .catch(err => setError(err.message))
-      .finally(() => setLoading(false));
-
+      .finally(() => {
+        setLoading(false);
+        setAuthExchanging(false);
+      });
     }
   }, [config]);
+
 
   // Save Settings
   const handleSaveConfig = () => {
@@ -342,7 +348,15 @@ export default function App() {
       </nav>
 
       {/* Main Content */}
-      {!authData ? (
+      {authExchanging ? (
+        <div className="auth-wrapper">
+          <div className="auth-card glass" style={{ padding: '3rem 2rem' }}>
+            <div className="loading-spinner" style={{ width: '40px', height: '40px', margin: '0 auto' }}></div>
+            <h3 style={{ marginTop: '1rem', fontSize: '1.2rem' }}>Authenticating with Salesforce...</h3>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Exchanging OAuth authorization token</p>
+          </div>
+        </div>
+      ) : !authData ? (
         <div className="auth-wrapper">
           <div className="auth-card glass">
             <div style={{ margin: '0 auto', background: 'rgba(0,161,224,0.1)', padding: '1rem', borderRadius: '50%', width: 'fit-content' }}>
@@ -363,6 +377,7 @@ export default function App() {
           </div>
         </div>
       ) : (
+
         <>
           {/* Controls Bar */}
           <div className="controls-bar glass">
