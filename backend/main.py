@@ -13,10 +13,11 @@ app = FastAPI(title="Salesforce CRUD API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Configuration defaults for Salesforce External Client App OAuth
 SALESFORCE_CLIENT_ID = os.getenv("SALESFORCE_CLIENT_ID", "")
