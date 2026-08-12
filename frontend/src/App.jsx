@@ -15,7 +15,8 @@ import {
   ShieldCheck
 } from 'lucide-react';
 
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api').replace(/\/+$/, '');
+
 
 
 export default function App() {
@@ -298,7 +299,8 @@ export default function App() {
 
 
   const openCreateModal = () => {
-    const fields = config?.object_fields[selectedObject] || [];
+    const fields = config?.object_fields?.[selectedObject] || [];
+
     const initData = {};
     fields.forEach(f => { if (f !== 'Id') initData[f] = ''; });
     setFormData(initData);
@@ -307,7 +309,8 @@ export default function App() {
 
   const openEditModal = (rec) => {
     setActiveRecord(rec);
-    const fields = config?.object_fields[selectedObject] || [];
+    const fields = config?.object_fields?.[selectedObject] || [];
+
     const initData = {};
     fields.forEach(f => { if (f !== 'Id') initData[f] = rec[f] || ''; });
     setFormData(initData);
@@ -319,7 +322,8 @@ export default function App() {
     setModalMode('view');
   };
 
-  const currentFields = config?.object_fields[selectedObject] || [];
+  const currentFields = config?.object_fields?.[selectedObject] || [];
+
 
   return (
     <div className="app-container">
